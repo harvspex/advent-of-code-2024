@@ -17,7 +17,14 @@ class Day1(Day):
 
 
     def part_2(self):
-        return '22222'
+        list_a, list_b = self.get_input()
+        sum: int = 0
+
+        for item_a in list_a:
+            sum += item_a * list_b.count(item_a)
+
+        return sum
+
 
     def get_input(self, filename = None):
         list_a, list_b = [], []
