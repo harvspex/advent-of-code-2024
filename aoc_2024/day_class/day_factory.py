@@ -1,9 +1,11 @@
 from typing import Any
 from aoc_2024.day_class.day import Day
 from aoc_2024.days.day_1 import Day1
+from aoc_2024.days.day_2 import Day2
 
 DAYS = {
-    1: Day1
+    1: Day1,
+    2: Day2
 }
 
 def run_day(day: int, part: int=None, input_file: str=None, verbose:bool=True, days=DAYS):
@@ -12,6 +14,9 @@ def run_day(day: int, part: int=None, input_file: str=None, verbose:bool=True, d
         input_file = str(day)
 
     # Get day object
+    # TODO: Init'ing Day(input_file) doesn't really do anything.
+    # Verbose is also not used.
+    # It would be good to easily init in "test" mode, to use test input from AOC
     day_class: Day = days[day](input_file)
 
     # Run parts
