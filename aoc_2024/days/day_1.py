@@ -1,3 +1,8 @@
-from aoc_2024.utils.utils import get_input
+from aoc_2024.day_class.day import Day
 
-print(get_input('day_1.txt'))
+class Day1(Day):
+    def part_1(self):
+        print('part 1')
+
+    def part_2(self):
+        print('part 2')
