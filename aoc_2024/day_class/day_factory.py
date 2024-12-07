@@ -26,11 +26,12 @@ def discover_days(directory: str="aoc_2024/days") -> dict[int, type]:
 # Dynamically populate DAYS_DICT
 DAYS_DICT = discover_days()
 
-def get_filename(filename: str, test_mode: bool=False) -> str:
-
+def get_filename(filename: str, part_num: int=None, test_mode: bool=False) -> str:
+    # TODO: Could be better. Will crash on bad part_num
     if filename.isdigit():
         if test_mode:
-            filename = f'aoc_2024/test_inputs/day_{filename}.txt'
+            filename = f'aoc_2024/test_inputs/day_{filename}'
+            filename += f'_{part_num}.txt' if (part_num is not None) else '.txt'
         else:
             filename = f'aoc_2024/inputs/day_{filename}.txt'
 
@@ -49,7 +50,7 @@ def run_day(
 
     # Prepare input filename
     if infile is None:
-        infile = get_filename(str(day_num), test_mode)
+        infile = get_filename(str(day_num), part_num, test_mode)
 
     # Create day
     day_type: type = days_dict[day_num]

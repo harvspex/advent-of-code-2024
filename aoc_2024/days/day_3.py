@@ -33,11 +33,15 @@ class Day3(Day):
 
     def part_2(self):
         instructions: str = self.get_input()
+
         DO: str = 'do()'
         DONT: str = 'don\'t()'
         MUL_START: str = 'mul('
         MUL_END: str = ')'
+
+        do_multiply: bool = True
         start: int = 0
+        total: int = 0
 
         while True:
             next_match = Day3.find_next(instructions, start, DO, DONT, MUL_START)
@@ -45,16 +49,23 @@ class Day3(Day):
             if next_match is None:
                 break
 
-            index, string = next_match
+            start, string = next_match
+            start += len(string)
 
             if string == DO:
-                find_next_args = [DONT, MUL_START]
+                do_multiply = True
+
             elif string == DONT:
-                find_next_args = [DO]
+                do_multiply = False
+
             elif string == MUL_START:
-                find_next_args = [DO, DONT, MUL_START, MUL_END]
-            elif string == MUL_END:
-                find_next_args = [DO, DONT, MUL_START, MUL_END]
+                end, string = Day3.find_next(instructions, start, MUL_END)
+                ints = Day3.parse_ints(instructions[start:end])
+                if ints and do_multiply:
+                    total += ints[0] * ints[1]
+                    start = end
+
+        return total
 
 
     @staticmethod
