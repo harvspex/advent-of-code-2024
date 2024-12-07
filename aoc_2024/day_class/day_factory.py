@@ -1,11 +1,30 @@
+import importlib
+import os
+import re
 from aoc_2024.day_class.day import Day
-from aoc_2024.days.day_1 import Day1
-from aoc_2024.days.day_2 import Day2
 
-DAYS_DICT = {
-    1: Day1,
-    2: Day2,
-}
+def discover_days(directory: str="aoc_2024/days") -> dict[int, type]:
+    days_dict = {}
+    day_pattern = re.compile(r"day_(\d+)\.py$")  # Matches files like day_1.py, day_2.py
+
+    for filename in os.listdir(directory):
+        match = day_pattern.match(filename)
+        if match:
+            day_num = int(match.group(1))
+            module_name = f"aoc_2024.days.{filename[:-3]}"  # Remove ".py" from filename
+            module = importlib.import_module(module_name)
+
+            # Get the class from the module (assumes class is named `DayX`)
+            class_name = f"Day{day_num}"
+            day_class = getattr(module, class_name, None)
+
+            if day_class and issubclass(day_class, Day):  # Ensure it's a subclass of `Day`
+                days_dict[day_num] = day_class
+
+    return days_dict
+
+# Dynamically populate DAYS_DICT
+DAYS_DICT = discover_days()
 
 def get_filename(filename: str, test_mode: bool=False) -> str:
 
