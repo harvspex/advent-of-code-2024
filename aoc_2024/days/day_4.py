@@ -10,8 +10,26 @@ class Day4(Day):
 
     def part_1(self):
         self.get_input()
-        print(self.check_backslash(0))
-        print(self.check_forwardslash(0))
+        return self.check_all()
+
+    def check_all(self):
+        total: int = 0
+        for row_i in range(self.row_len):
+            # Check all rows
+            row = self.crossword[row_i]
+            total += self.check_row(row)
+
+            # If There is room below the row for a diagonal target word
+            if row_i > (self.col_len - self.target_len):
+                # Check all diagonals
+                total += self.check_backslash(row_i)
+                total += self.check_forwardslash(row_i)
+
+        # Check all cols
+        for col_i in range(self.col_len):
+            self.check_column(col_i)
+
+        return total
 
     def has_target(self, substring: str):
         return substring == self.target or substring == self.r_target
