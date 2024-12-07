@@ -20,10 +20,13 @@ class Day4(Day):
             total += self.check_row(row)
 
             # If There is room below the row for a diagonal target word
-            if row_i > (self.col_len - self.target_len):
+            if row_i < (self.col_len - self.target_len):
                 # Check all diagonals
                 total += self.check_backslash(row_i)
+                print()
                 total += self.check_forwardslash(row_i)
+                print()
+                print()
 
         # Check all cols
         for col_i in range(self.col_len):
@@ -52,10 +55,14 @@ class Day4(Day):
     def check_backslash(self, row_i: int):
         total: int = 0
 
-        for _ in range(self.row_len - self.target_len):
+        for x in range(self.row_len - self.target_len):
             substring: str = ''
             for char in range(self.target_len):
+
+                # TODO: Fix bug. Likely this line.
                 substring += self.crossword[row_i + char][char]
+
+            print(substring)
 
             if self.has_target(substring):
                 total += 1
@@ -69,6 +76,8 @@ class Day4(Day):
             substring: str = ''
             for char in range(self.target_len):
                 substring += self.crossword[row_i + char][x - char]
+
+            print(substring)
 
             if self.has_target(substring):
                 total += 1
