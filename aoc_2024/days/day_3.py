@@ -30,6 +30,33 @@ class Day3(Day):
 
         return total
 
+
+    def part_2(self):
+        instructions: str = self.get_input()
+        DO: str = 'do()'
+        DONT: str = 'don\'t()'
+        MUL_START: str = 'mul('
+        MUL_END: str = ')'
+        start: int = 0
+
+        while True:
+            next_match = Day3.find_next(instructions, start, DO, DONT, MUL_START)
+
+            if next_match is None:
+                break
+
+            index, string = next_match
+
+            if string == DO:
+                find_next_args = [DONT, MUL_START]
+            elif string == DONT:
+                find_next_args = [DO]
+            elif string == MUL_START:
+                find_next_args = [DO, DONT, MUL_START, MUL_END]
+            elif string == MUL_END:
+                find_next_args = [DO, DONT, MUL_START, MUL_END]
+
+
     @staticmethod
     def parse_ints(substring: str) -> list[int]:
         try:
@@ -38,8 +65,21 @@ class Day3(Day):
         except ValueError:
             return []
 
-    def part_2(self):
-        return
+
+    @staticmethod
+    def find_next(string: str, start: int, *args: str):
+        next_indices = {}
+
+        for arg in args:
+            next_index = string.find(arg, start)
+
+            if next_index != -1:
+                next_indices[next_index] = arg
+
+        sorted_indices = sorted(next_indices.items())
+
+        return sorted_indices[0] if len(sorted_indices) > 0 else None
+
 
     def get_input(self):
         return ''.join(line.strip() for line in super().get_input())
