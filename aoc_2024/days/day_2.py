@@ -5,16 +5,20 @@ class Day2(Day):
         return self.get_safe_reports(remove_mode=False)
 
     def part_2(self):
-        # 450 too low
-        # 458 too low
         return self.get_safe_reports(remove_mode=True)
 
     def get_safe_reports(self, remove_mode: bool=False):
-        total_safe_reports: int =0
+        total_safe_reports: int = 0
 
         for report in self.get_input():
-            if self.check_gradient(report, remove_mode=remove_mode):
+            if self.check_gradient(report):
                 total_safe_reports += 1
+
+            elif remove_mode:
+                for i in range(len(report)):
+                    if self.check_gradient(self.remove_element(report, i)):
+                        total_safe_reports += 1
+                        break
 
         return total_safe_reports
 
@@ -22,8 +26,7 @@ class Day2(Day):
     def check_gradient(
         report: list[int],
         min_g: int=1,
-        max_g: int=3,
-        remove_mode: bool=False
+        max_g: int=3
     ):
         is_safe: bool = True
         is_increasing: bool = None
@@ -49,13 +52,7 @@ class Day2(Day):
             if not is_safe:
                 break
 
-        if remove_mode and not is_safe:
-            return (
-                Day2.check_gradient(Day2.remove_element(report, i), min_g, max_g, remove_mode=False)
-                or Day2.check_gradient(Day2.remove_element(report, i+1), min_g, max_g, remove_mode=False)
-            )
-        else:
-            return is_safe
+        return is_safe
 
     @staticmethod
     def remove_element(lst: list, i: int):
