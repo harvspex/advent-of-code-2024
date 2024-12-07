@@ -1,8 +1,6 @@
 from aoc_2024.day_class.day import Day
 
 class Day1(Day):
-    day_num = 1
-
     def part_1(self):
         list_a, list_b = self.get_input()
         list_a.sort()
@@ -26,9 +24,10 @@ class Day1(Day):
         return sum
 
 
-    def get_input(self, filename = None):
+    def get_input(self):
         list_a, list_b = [], []
-        for line in super().get_input(filename):
+
+        for line in super().get_input():
             token_a, token_b = line.split()
             list_a.append(int(token_a))
             list_b.append(int(token_b))

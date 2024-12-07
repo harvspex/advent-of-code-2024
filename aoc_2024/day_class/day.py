@@ -4,7 +4,7 @@ from typing import Any
 
 @dataclass
 class Day(ABC):
-    day_num: int
+    infile: str
 
     @abstractmethod
     def part_1(self): ...
@@ -12,31 +12,28 @@ class Day(ABC):
     @abstractmethod
     def part_2(self): ...
 
-    def run(self, part=None):
+    def run(self, day_num: int, part_num: int=None, verbose: bool=True):
         result: Any = None
 
-        match part:
+        match part_num:
             case None:
-                result = self.run(1), self.run(2)
+                # Run and return both parts as a tuple
+                result = (
+                    self.run(day_num, 1, verbose),
+                    self.run(day_num, 2, verbose)
+                )
                 return result
             case 1:
                 result = self.part_1()
             case 2:
                 result = self.part_2()
 
-        self.print_result(result, part)
+        if verbose:
+            print(f'Day {day_num} part {part_num}: {result}')
+
         return result
 
-    def print_result(self, result: Any, part: int):
-        print(f'Day {self.day_num} part {part}: {result}')
-
-    def get_filename(self) -> str:
-        return f'aoc_2024/inputs/day_{self.day_num}.txt'
-
-    def get_input(self, filename: str=None):
-        if filename is None:
-            filename = self.get_filename()
-
-        with open(filename, 'r') as infile:
+    def get_input(self):
+        with open(self.infile, 'r') as infile:
             for line in infile:
                 yield line
