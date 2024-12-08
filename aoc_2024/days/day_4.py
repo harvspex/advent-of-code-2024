@@ -5,8 +5,8 @@ class Day4(Day):
     r_target: str = ''.join(reversed(target))
     target_len: int = len(target)
     crossword: list[list[str]] = []
-    row_len: int = None
-    col_len: int = None
+    num_cols: int = None
+    num_rows: int = None
 
     def part_1(self):
         self.get_input()
@@ -15,21 +15,21 @@ class Day4(Day):
     def check_all(self):
         total: int = 0
 
-        for row_i in range(self.row_len):
+        for row_i in range(self.num_rows):
 
             # Check all rows
             row = self.crossword[row_i]
             total += self.check_row(row)
 
             # If There is room below the current row for a diagonal target word
-            if row_i < (self.col_len - (self.target_len - 1)):
+            if row_i < (self.num_rows - (self.target_len - 1)):
 
                 # Check all diagonals
                 total += self.check_diagonal(row_i)
                 total += self.check_diagonal(row_i, reverse=True)
 
         # Check all columns
-        for col_i in range(self.col_len):
+        for col_i in range(self.num_cols):
             total += self.check_column(col_i)
 
         return total
@@ -38,11 +38,9 @@ class Day4(Day):
         return substring == self.target or substring == self.r_target
 
     def check_row(self, row: list[str]):
-        print(''.join(row))
-
         total: int = 0
 
-        for i in range(self.row_len - self.target_len):
+        for i in range(self.num_cols - (self.target_len-1)):
             substring: str = ''.join(row[i : i + self.target_len])
 
             if self.has_target(substring):
@@ -57,11 +55,11 @@ class Day4(Day):
     def check_diagonal(self, row_i: int, reverse: bool=False):
         total: int = 0
 
-        row_range = range(self.row_len - (self.target_len-1))
+        row_range = range(self.num_cols - (self.target_len-1))
         get_char = lambda char: char
         
         if reverse:
-            row_range = reversed(range(self.target_len-1, self.row_len))
+            row_range = reversed(range(self.target_len-1, self.num_cols))
             get_char = lambda char: -char
         
         for x in row_range:
@@ -85,9 +83,12 @@ class Day4(Day):
             row = [ch for ch in line.strip()]
             if row:
                 self.crossword.append(row)
-            if self.row_len is None:
-                self.row_len = len(row)
-            elif self.row_len != len(row):
+            if self.num_cols is None:
+                self.num_cols = len(row)
+            elif self.num_cols != len(row):
                 raise ValueError('Error: row lengths do not match')
 
-        self.col_len = len(self.crossword)
+        self.num_rows = len(self.crossword)
+
+        print(f'num rows: {self.num_rows}')
+        print(f'num cols: {self.num_cols}')
