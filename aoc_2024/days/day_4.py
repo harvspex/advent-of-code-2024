@@ -89,6 +89,3 @@ class Day4(Day):
                 raise ValueError('Error: row lengths do not match')
 
         self.num_rows = len(self.crossword)
-
-        print(f'num rows: {self.num_rows}')
-        print(f'num cols: {self.num_cols}')
