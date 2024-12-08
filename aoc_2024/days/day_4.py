@@ -9,6 +9,8 @@ class Day4(Day):
     num_rows: int = None
 
     def get_input(self):
+        self.crossword.clear()
+
         for line in super().get_input():
             row = [ch for ch in line.strip()]
             if row:
