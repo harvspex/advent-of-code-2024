@@ -14,23 +14,23 @@ class Day4(Day):
 
     def check_all(self):
         total: int = 0
+
         for row_i in range(self.row_len):
+
             # Check all rows
             row = self.crossword[row_i]
             total += self.check_row(row)
 
-            # If There is room below the row for a diagonal target word
-            if row_i < (self.col_len - self.target_len):
-                # Check all diagonals
-                total += self.check_backslash(row_i)
-                print()
-                total += self.check_forwardslash(row_i)
-                print()
-                print()
+            # If There is room below the current row for a diagonal target word
+            if row_i < (self.col_len - (self.target_len - 1)):
 
-        # Check all cols
+                # Check all diagonals
+                total += self.check_diagonal(row_i)
+                total += self.check_diagonal(row_i, reverse=True)
+
+        # Check all columns
         for col_i in range(self.col_len):
-            self.check_column(col_i)
+            total += self.check_column(col_i)
 
         return total
 
@@ -38,6 +38,8 @@ class Day4(Day):
         return substring == self.target or substring == self.r_target
 
     def check_row(self, row: list[str]):
+        print(''.join(row))
+
         total: int = 0
 
         for i in range(self.row_len - self.target_len):
@@ -52,32 +54,23 @@ class Day4(Day):
         column: list = [row[col_i] for row in self.crossword]
         return self.check_row(column)
 
-    def check_backslash(self, row_i: int):
+    def check_diagonal(self, row_i: int, reverse: bool=False):
         total: int = 0
 
-        for x in range(self.row_len - self.target_len):
+        row_range = range(self.row_len - (self.target_len-1))
+        get_char = lambda char: char
+        
+        if reverse:
+            row_range = reversed(range(self.target_len-1, self.row_len))
+            get_char = lambda char: -char
+        
+        for x in row_range:
             substring: str = ''
+
             for char in range(self.target_len):
-
-                # TODO: Fix bug. Likely this line.
-                substring += self.crossword[row_i + char][char]
-
-            print(substring)
-
-            if self.has_target(substring):
-                total += 1
-
-        return total
-
-    def check_forwardslash(self, row_i: int):
-        total: int = 0
-
-        for x in reversed(range(self.target_len - 1, self.row_len)):
-            substring: str = ''
-            for char in range(self.target_len):
-                substring += self.crossword[row_i + char][x - char]
-
-            print(substring)
+                next_row_down = self.crossword[row_i + char]
+                next_diagonal_char = next_row_down[x + get_char(char)]
+                substring += next_diagonal_char
 
             if self.has_target(substring):
                 total += 1
