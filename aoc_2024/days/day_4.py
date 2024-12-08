@@ -89,7 +89,14 @@ class Day4(Day):
 
     def part_2(self):
         self.get_input()
-        target = 'MAS'
+        target: str = 'MAS'
+        total: int = 0
+
+        for intersection in self.yield_intersections(target):
+            if self.check_cross_shape(target, intersection):
+                total += 1
+
+        return total
 
     def yield_intersections(self, target: str):
         len_target = len(target)
@@ -105,19 +112,28 @@ class Day4(Day):
                 if self.crossword[row_i][col_i] == middle_letter:
                     yield (row_i, col_i)
 
-    def check_for_mas(self, coords: tuple[int, int], target='MAS'):
-        # Checks 4 diagonal coordinates surrounding the provided coords tuple.
-        # Inflexible = only works for target of length 3
-        # Could be improved
-        r_target = ''.join(reversed(target))
-        
-        self.get_mas_substring(coords) 
+    def check_cross_shape(self, target: str, coords: tuple[int, int]):
+        forwardslash = self.get_mas_substring(coords, reverse=True)
+        backslash = self.get_mas_substring(coords, reverse=False)
+        return (
+            self.substring_contains_target(forwardslash, target)
+            and self.substring_contains_target(backslash, target)
+        )
 
     def get_mas_substring(self, coords: tuple[int, int], reverse: bool=False):
+        # Checks 4 diagonal coordinates surrounding the provided coords tuple.
+        # Inflexible; only works for target of length 3. Could be improved.
         coords_shifts = [(1,1),(0,0),(-1,-1)] if reverse else [(-1,1),(0,0),(1,-1)]
 
         substring = ''
         x, y = coords
 
         for x_shift, y_shift in coords_shifts:
-            substring += self.crossword[x+x_shift][y+y_shift]
+            substring += self.crossword[x + x_shift][y + y_shift]
+
+        return substring
+
+    @staticmethod
+    def substring_contains_target(substring: str, target: str):
+        r_target = ''.join(reversed(target))
+        return target == substring or r_target == substring
