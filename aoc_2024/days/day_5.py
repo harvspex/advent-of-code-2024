@@ -40,11 +40,13 @@ class Day5(Day):
 
         for line in super().get_input():
             try:
-                before, after = [int(_) for _ in line.strip().split('|') if _ != '']
+                before, after = [int(_) for _ in line.strip().split('|') if _.isdigit()]
                 Day5.add_page_orders(before, after, page_orders)
             except ValueError as e:
                 # TODO: Complete
                 break
+
+        print(page_orders.keys())
 
     @staticmethod
     def add_page_orders(before: int, after: int, page_orders: dict[PageOrder]):
